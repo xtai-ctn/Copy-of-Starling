@@ -1625,12 +1625,13 @@ fn backend_order(api: GraphicsApi, os: &str, wgpu_backend: bool) -> Vec<wgpu::Ba
     }
     let windows = os == "windows";
     match api {
-        GraphicsApi::Auto if windows => vec![Backends::VULKAN, Backends::DX12, Backends::GL],
-        GraphicsApi::Auto => vec![Backends::VULKAN, Backends::GL],
-        GraphicsApi::Dx12 if windows => vec![Backends::DX12],
-        GraphicsApi::Vulkan | GraphicsApi::Dx12 => vec![Backends::VULKAN],
-        GraphicsApi::OpenGl => vec![Backends::GL],
-    }
+    GraphicsApi::Auto if windows => vec![Backends::VULKAN, Backends::DX12, Backends::GL],
+    GraphicsApi::Auto if os == "android" => vec![Backends::GL, Backends::VULKAN],
+    GraphicsApi::Auto => vec![Backends::VULKAN, Backends::GL],
+    GraphicsApi::Dx12 if windows => vec![Backends::DX12],
+    GraphicsApi::Vulkan | GraphicsApi::Dx12 => vec![Backends::VULKAN],
+    GraphicsApi::OpenGl => vec![Backends::GL],
+}
 }
 fn backends_name(backends: wgpu::Backends) -> &'static str {
     match backends {
